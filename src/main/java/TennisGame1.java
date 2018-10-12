@@ -1,76 +1,78 @@
 
 public class TennisGame1 implements TennisGame {
-    
-    private int m_puntaje1 = 0;
-    private int m_puntaje2 = 0;
-    private String nombreJugador1;
-    private String nombreJugador2;
+    private Jugador jugador1, jugador2;
 
     public TennisGame1(String nombreJugador1, String nombreJugador2) {
-        this.nombreJugador1 = nombreJugador1;
-        this.nombreJugador2 = nombreJugador2;
+    	this.jugador1 = new Jugador(nombreJugador1);
+    	this.jugador2 = new Jugador(nombreJugador1);
     }
 
     public void ganoPunto(String nombreJugador) {
-        if (nombreJugador == "jugador1")
-            m_puntaje1 += 1;
+        if (nombreJugador.equals("jugador1"))
+            jugador1.aumentarPuntaje();
         else
-            m_puntaje2 += 1;
+            jugador2.aumentarPuntaje();
     }
-
+    
     public String getPuntaje() {
-        String puntaje = "";
-        int tempPuntaje=0;
-        if (m_puntaje1 == m_puntaje2)
+        
+        if (jugador1.getPuntaje() == jugador2.getPuntaje())
+            return getPuntajeIguales(jugador1.getPuntaje());
+        else if (jugador1.getPuntaje() > 3 || jugador2.getPuntaje() > 3)
+            return getPuntajeMayorA3(jugador1.getPuntaje() - jugador2.getPuntaje());
+        else
+        	return getPuntajeMenorA3();    
+    }
+    
+    private String getPuntajeIguales(int puntaje) {
+    	switch (puntaje)
         {
-            switch (m_puntaje1)
+            case 0: return "Amor-Todos";
+            case 1: return "Quince-Todos";
+            case 2: return "Treinta-Todos";
+        }
+    	return "Deuce";
+    }
+    
+    private String getPuntajeMayorA3(int diferenciaPuntajes) {
+        if (diferenciaPuntajes==1) 
+        	return "Ventaja jugador1";
+        else if (diferenciaPuntajes == -1) 
+        	return "Ventaja jugador2";
+        else if (diferenciaPuntajes >= 2) 
+        	return "Gana jugador1";
+        else 
+        	return "Gana jugador2";
+    }
+    
+    private String getPuntajeMenorA3() {
+    	int tempPuntaje = 0;
+    	String puntaje = "";
+    	for (int i=1; i<3; i++)
+        {
+            if (i==1) 
+            	tempPuntaje = jugador1.getPuntaje();
+            else 
+            { 
+            	puntaje+="-"; 
+            	tempPuntaje = jugador2.getPuntaje();
+            }
+            switch(tempPuntaje)
             {
                 case 0:
-                        puntaje = "Amor-Todos";
+                    puntaje+="Amor";
                     break;
                 case 1:
-                        puntaje = "Quince-Todos";
+                    puntaje+="Quince";
                     break;
                 case 2:
-                        puntaje = "Treinta-Todos";
+                    puntaje+="Treinta";
                     break;
-                default:
-                        puntaje = "Deuce";
+                case 3:
+                    puntaje+="Cuarenta";
                     break;
-                
             }
         }
-        else if (m_puntaje1 >=4 || m_puntaje2 >=4)
-        {
-            int minusResult = m_puntaje1 - m_puntaje2;
-            if (minusResult==1) puntaje ="Ventaja jugador1";
-            else if (minusResult ==-1) puntaje ="Ventaja jugador2";
-            else if (minusResult>=2) puntaje = "Gana jugador1";
-            else puntaje ="Gana jugador2";
-        }
-        else
-        {
-            for (int i=1; i<3; i++)
-            {
-                if (i==1) tempPuntaje = m_puntaje1;
-                else { puntaje+="-"; tempPuntaje = m_puntaje2;}
-                switch(tempPuntaje)
-                {
-                    case 0:
-                        puntaje+="Amor";
-                        break;
-                    case 1:
-                        puntaje+="Quince";
-                        break;
-                    case 2:
-                        puntaje+="Treinta";
-                        break;
-                    case 3:
-                        puntaje+="Cuarenta";
-                        break;
-                }
-            }
-        }
-        return puntaje;
+    	return puntaje;
     }
 }
